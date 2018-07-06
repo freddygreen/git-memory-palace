@@ -1,45 +1,51 @@
 #!/bin/bash
 #
 ##################################################################################################################
+# Script:              setup-git-v1.sh
+# Original Author:     Erik DuBois
+# Modifying Author:    Fred Green
+##################################################################################################################
+##################################################################################################################
 #
-#   DO NOT JUST RUN THIS. EXAMINE AND JUDGE. RUN AT YOUR OWN RISK.
+#   CAVEAT EMPTOR. DRIVING ON LEARNER'S PERMIT. RUN AT YOUR OWN RISK.
 #
 ##################################################################################################################
 
-# checking if kernel files are present otherswise github will become too big
+# Installing git by specific OS distribution, if not already installed.
 
-if [ -f linux* ]; then
-	echo "####################################"
-    	echo "Stopping the script!!"
-    	echo "Wait for the kernel update script to quit."
-    	echo "####################################"
-    	exit 0
+if ! location="$(type -p "git")" || [ -z "git" ]; then
+
+    echo "#################################################"
+    echo "Installing git to ensure that this script works.
+    echo "#################################################"
+
+    sudo apt install git -y
+    # check for apt-get
+    if which apt-get > /dev/null; then
+	sudo apt-get install -y git
+    fi
+
+    # check for pacman
+    if which pacman > /dev/null; then
+	sudo pacman -S --noconfirm git
+    fi
+
+    # check for eopkg
+    if which eopkg > /dev/null; then
+	sudo eopkg -y install git
+    fi
 fi
 
+# Git setup. To enforce local visibility, edit user name & email prior to this script's execution
 
-# checking if I have the latest files from github
-echo "Checking for newer files online first"
-git pull
-
-# Below command will backup everything inside the project folder
-git add --all .
-
-# Give a comment to the commit if you want
-echo "####################################"
-echo "Write your commit comment!"
-echo "####################################"
-
-read input
-
-# Committing to the local repository with a message containing the time details and commit text
-curtime=$(date)
-git commit -m "Comment : $input on $curtime"
-
-# Push the local files to github
-
-git push -u origin master
-
+git init
+git config --global user.name "username"
+git config --global user.email "email"
+sudo git config --system core.editor vim
+git config --global credential.helper.cache
+git config --global credential.helper 'cache --timeout=100000'
+git config --global push.default simple
 
 echo "################################################################"
-echo "###################    Git Push Done      ######################"
+echo "#############    End of setup-git-v1.sh script    ##############"
 echo "################################################################"
