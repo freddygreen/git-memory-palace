@@ -1,0 +1,56 @@
+#+begin_src emacs-lisp
+(setq inhibit-startup-message t)
+(tool-bar-mode -1)
+(fset 'yes-or-no-p 'y-or-n-p)
+(global-set-key (kbd "<f5>") 'revert-buffer)
+#+end_src
+
+#+begin_src emacs-lisp
+(setq make-backup-files nil)
+(setq auto-save-default nil)
+#+end_src
+
+
+#+begin_src emacs-lisp
+(defun single-font-size ()
+  "Reset all faces to the height of the default face."
+  (dolist (f (face-list))
+    (when (not (equal 'default f))
+      (set-face-attribute f nil :height 1.0))))
+
+(load-theme 'tango-dark t)
+(add-hook 'after-init-hook
+          'single-font-size)
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package try
+        :ensure t)
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package which-key
+        :ensure t
+        :config
+        (which-key-mode))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package auto-complete 
+:ensure t
+:init
+(progn
+(ac-config-default)
+  (global-auto-complete-mode t)
+ ))
+#+end_src
+
+;; Syntax highlighting in org code blocks
+#+begin_src emacs-lisp
+(setq org-src-fontify-natively 1)
+#+end_src
+
+;; Load org mode
+#+begin_src emacs-lisp
+;(require 'org)
+#+end_src
